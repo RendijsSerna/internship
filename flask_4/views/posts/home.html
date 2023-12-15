@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>homepage</title>
+</head>
+<body>
+   {% if message|length > 0 %}
+       <div style="color: crimson;"> {{ message }}</div>
+    {% endif %}
+     <tbody>
+        {% for post in posts %}
+            <tr>
+                <td>{{ post.title }}</td>
+                <td>{{ post.modified }}</td>
+                <p></p>
+            </tr>
+        {% endfor %}
+    </tbody>
+</body>
+</html>
