@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <style type="text/css">
+            body {
+                background-color: lightgray;
+            }
+        </style>
+        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+    </head>
+    <body>
+        <h1>New post</h1>
+        <form action="{{ url_for('posts.post_new') }}" method="POST">
+            <label>Title</label>
+            <input type="text" name="post_title" />
+
+            <label>Body</label>
+            <textarea name="post_body"></textarea>
+
+             <label>url_slug</label>
+            <textarea name="url_slug"></textarea>
+
+            <input type="submit" value="Save" />
+        </form>
+    </body>
+</html>
