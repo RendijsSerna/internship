@@ -1,9 +1,9 @@
-import dataclasses
+from dataclasses import dataclass
 
 from models.EnumPostStatus import EnumPostStatus
 
 
-@dataclasses.dataclass
+@dataclass
 class ModelPost:
     post_id: int = 0
     url_slug: str = ""

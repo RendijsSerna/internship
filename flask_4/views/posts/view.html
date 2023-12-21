@@ -1,9 +1,12 @@
-<html>
-    <head>
-        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-    </head>
-    <body>
-        <h1>{{ post.title }}</h1>
+{% extends "posts/base.html" %}
+{% block title %}View{% endblock %}
+{% block head %}
+  {{ super() }}
+
+{% endblock %}
+{% block content %}
+
+   <h1>{{ post.title }}</h1>
         <p>
             {{ post.body }}
         </p>
@@ -11,5 +14,5 @@
             <input type="submit" value="Delete" name="button_type" >
              <input type="submit" value="Edit" name="button_type" >
         </form>
-    </body>
-</html>
+
+{% endblock %}

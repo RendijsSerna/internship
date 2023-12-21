@@ -3,7 +3,7 @@ from flask import request, redirect, url_for, session
 
 from controllers.ControllerDatabase import ControllerDatabase
 from models.ModelPost import ModelPost
-import re
+from models.UtilStrings import UtilStrings
 
 
 class ControllerPosts:
@@ -17,7 +17,7 @@ class ControllerPosts:
             post.title = request.form.get('post_title').strip()
             post.body = request.form.get('post_body').strip()
             temp = request.form.get('url_slug')
-            post.url_slug = ControllerPosts.slugify(temp)
+            post.url_slug = UtilStrings.slugify(temp)
 
             url_slug = ControllerDatabase.insert_post(post)
             return redirect(url_for('posts.post_view', url_slug=url_slug))
@@ -39,17 +39,8 @@ class ControllerPosts:
     @staticmethod
     @blueprint.route("/delete/<post_id>", methods=["POST"])
     def delete_post(post_id):
-
         didPostDelete = ControllerDatabase.delete_post(post_id)
 
         return didPostDelete
 
-    def slugify(s):
-        s = s.lower().strip()
-        # replaces special chars with ''
-        s = re.sub(r'[^\w\s-]', '', s)
-        # replaces spaces with  one -
-        s = re.sub(r'[\s_-]+', '-', s)
-        # replaces any - at the front or end of string
-        s = re.sub(r'^-+|-+$', '', s)
-        return s
+

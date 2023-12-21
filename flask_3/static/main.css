@@ -17,3 +17,6 @@ label, input, textarea {
 textarea {
     height: 200px;
 }
+body{
+      background-color: lightgray;
+}

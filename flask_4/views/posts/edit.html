@@ -1,17 +1,17 @@
-<html>
-    <head>
-        <style type="text/css">
-            body {
-                background-color: lightgray;
-            }
-        </style>
-        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-    </head>
-    <body>
-        <h1>New post</h1>
-        <form action="{{ url_for('posts.post_edit') }}" method="POST">
+{% extends "posts/base.html" %}\
+ {% for post in posts %}
+{% block title %}posts{% endblock %}
+{% endfor %}
+{% block head %}
+  {{ super() }}
+
+{% endblock %}
+{% block content %}
+
+      <form action="{{ url_for('posts.post_edit') }}" method="POST">
             <label>Title</label>
             <input type="text" name="post_title" />
+
 
             <label>Body</label>
             <textarea  name="post_body"></textarea>
@@ -22,5 +22,5 @@
 
             <input type="submit" value="Save" />
         </form>
-    </body>
-</html>
+
+{% endblock %}

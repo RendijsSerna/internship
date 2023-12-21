@@ -4,26 +4,22 @@ from typing import List
 from models.ModelPost import ModelPost
 import sqlite3
 
+from utils.UtilDatabaseCursor import UtilDatabaseCursor
+
 
 class ControllerDatabase:
-
-    @staticmethod
-    def __connection():
-        return sqlite3.connect("./blog.sqlite")
 
     @staticmethod
     def insert_post(post: ModelPost) -> int:
         post_id = 0
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 cursor.execute(
                     "INSERT INTO posts (title, body, url_slug) "
                     "VALUES (:title, :body, :url_slug);",
                     post.__dict__
                 )
                 post_id = cursor.execute("SELECT last_insert_rowid()").fetchone()[0]
-                cursor.close()
         except Exception as exc:
             print(exc)
         return post_id
@@ -31,14 +27,12 @@ class ControllerDatabase:
     @staticmethod
     def update_post(post: ModelPost):
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 cursor.execute("UPDATE posts SET (title, body, url_slug) ="
                                " (:title, :body, :url_slug) WHERE post_id = :post_id",
                                post.__dict__
 
                                )
-                cursor.close()
         except Exception as exc:
             print(exc)
 
@@ -46,8 +40,7 @@ class ControllerDatabase:
     def get_post(post_id: int = None, url_slug: str = None) -> ModelPost:
         post = None
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 if post_id:
                     query = cursor.execute(
                         "SELECT * FROM posts WHERE post_id = :post_id LIMIT 1;",
@@ -72,8 +65,6 @@ class ControllerDatabase:
                         post.status
                     ) = col
 
-                cursor.close()
-
         except Exception as exc:
             print(exc)
         return post
@@ -81,13 +72,11 @@ class ControllerDatabase:
     @staticmethod
     def delete_post(post_id: int) -> None:
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 cursor.execute(
-                    "DELETE FROM posts WHERE post_id = ?;",
+                    "DELETE FROM posts WHERE post_id = ?",
                     [post_id]
                 )
-                cursor.close()
         except Exception as exc:
             print(exc)
 
@@ -95,8 +84,7 @@ class ControllerDatabase:
     def get_all_posts() -> list[ModelPost]:
         posts = []
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 query = cursor.execute(
                     "SELECT * FROM posts "
 
@@ -115,7 +103,6 @@ class ControllerDatabase:
                                 post.modified = value
                         posts.append(post)
 
-            cursor.close()
         except Exception as exc:
             print(exc)
         return posts

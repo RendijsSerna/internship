@@ -46,13 +46,12 @@ class ControllerDatabase:
                     col = query.fetchone()
                     col_names = [it[0] for it in query.description]
                     post = ModelPost()
-                    for key, value in zip(col_names, col):
-                        if key == "post_id":
-                            post.post_id = value
-                        elif key == "title":
-                            post.title = value
-                        elif key == "body":
-                            post.body = value
+                    if "post_id" in col_names:
+                        post.post_id = col[col_names.index("post_id")]
+                    if "title" in col_names:
+                        post.title = col[col_names.index("title")]
+                    if "body" in col_names:
+                        post.body = col[col_names.index("body")]
 
             cursor.close()
         except Exception as exc:

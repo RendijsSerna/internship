@@ -1,0 +1,72 @@
+html {
+    font-family: "Arial";
+}
+
+/* CSS Selectors */
+input, textarea {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    margin-bottom: 20px;
+}
+
+label, input, textarea {
+    display: block;
+}
+
+textarea {
+    height: 200px;
+}
+.table-contents{
+    background-color: aliceblue;
+    border-spacing: 0;
+}
+.table-contents  td{
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0;
+    border-right-width: 0;
+    margin: 0;
+    padding: 5px;
+}
+table.table-contents tr td:last-child {
+     border-right-width: 1px;
+}
+table.table-contents tr:last-child td{
+     border-bottom-width: 1px;
+}
+
+
+
+
+div.div-contents > div.row > div{
+    background-color: aquamarine;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    border-bottom-width: 0;
+    border-right-width: 0;
+
+
+}
+div.div-contents > div.header{
+    font-weight: bold;
+
+}
+
+div.div-contents > div > div{
+    float: left;
+    width: 200px;
+    padding: 5px;
+
+}
+div.div-contents > div > div:last-child{
+    float: left;
+    clear: both;
+}
+a.button {
+    clear: both;
+    display: block;
+
+}

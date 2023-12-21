@@ -12,31 +12,31 @@ class ControllerPosts:
     @blueprint.route("/new", methods=["POST", "GET"])
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
+        tempReturn = 'posts/edit.html'
+        redirect_url = None
+
         if request.method == "POST":
-            if post_id:
+            if int(post_id):
                 button_type = request.form.get("button_type")
 
                 if button_type == "Delete":
                     ControllerDatabase.delete_post(post_id)
-                    return redirect('/?deleted=1')
-
-
-
-
+                    redirect_url = '/?deleted=1'
 
             else:
+                #TODO fix this error that has an issue where edit/0 returns error
                 post = ModelPost()
                 post.title = request.form.get('post_title').strip()
                 post.body = request.form.get('post_body').strip()
                 post.url_slug = request.form.get('url_slug').strip()
 
-                post_id = ControllerDatabase.insert_post(post)
+                ControllerDatabase.insert_post(post)
+                redirect_url = url_for('posts.post_view', url_slug=post.url_slug)
 
-                return redirect(url_for('posts.post_view', url_slug=post.url_slug))
-
-        return flask.render_template(
-            'posts/edit.html'
-        )
+        if redirect_url:
+            return redirect(redirect_url)
+        else:
+            return flask.render_template(tempReturn)
 
     @staticmethod
     @blueprint.route("/view/<url_slug>", methods=["GET"])
