@@ -2,6 +2,7 @@ html {
     font-family: "Arial";
 }
 
+
 /* CSS Selectors */
 input, textarea {
     border-width: 1px;
@@ -39,34 +40,61 @@ table.table-contents tr:last-child td{
 
 
 
+div.div-contents > div > div {
+    float: left;
+    width: 200px;
+    padding: 5px;
+}
 
-div.div-contents > div.row > div{
+div.div-contents > div > div:nth-child(3){
+    width: 60px;
+}
+
+
+
+div.div-contents > div > div {
     background-color: aquamarine;
-    border-color: black;
+    border-color: rgb(128, 128, 128);
     border-width: 1px;
     border-style: solid;
     border-bottom-width: 0;
     border-right-width: 0;
-
-
-}
-div.div-contents > div.header{
-    font-weight: bold;
-
 }
 
-div.div-contents > div > div{
-    float: left;
-    width: 200px;
-    padding: 5px;
-
-}
 div.div-contents > div > div:last-child{
-    float: left;
+    border-right-width: 1px;
+}
+
+div.div-contents > div > tr:last-child {
+    background-color: crimson;
+}
+
+div.div-contents > div.div-header{
+    font-weight: bold;
+}
+
+div.div-contents > div{
     clear: both;
 }
-a.button {
-    clear: both;
-    display: block;
 
+a.button{
+    clear: both;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    background-color: crimson;
+    color: #ffffff;
+    border: 2px solid crimson;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#title {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+#message {
+    color: crimson;
 }

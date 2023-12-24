@@ -3,21 +3,21 @@
 {% block content %}
 
     {% if message | length > 0  %}
-        <div>{{ message }}</div>
+       {{ message }}
     {% endif %}
-    <div class="div-contents">
-        <div class="div-header">
+    <div class="div-contents" >
+        <div class="div-header" >
             <div>Title</div>
             <div>Updated</div>
             <div>Edit</div>
         </div>
          {% for post in posts %}
             <div>
-                <div><a href="{{ url_for('posts.post_view', url_slug=post.url_slug) }}">{{ post.title }}</a></div>
+                <div>{{ post.title }}</a></div>
                 <div>{{ post.modified }}</div>
                 <div><a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a></div>
             </div>
         {% endfor %}
     </div>
-  <a class="button" href="{{url_for('posts.post_edit')}}">Add new post</a>
+  <a class="button" href="{{url_for('posts.post_edit')}}" >Add new post</a>
 {% endblock %}

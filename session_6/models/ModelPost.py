@@ -12,4 +12,8 @@ class ModelPost:
     thumbnail_uuid: str = ""
     created: int = 0
     modified: int = 0
-    status: EnumPostStatus = EnumPostStatus.not_set # ALT + ENTER
+    status: EnumPostStatus = EnumPostStatus.not_set  # ALT + ENTER
+
+    parent_post_id: int = None
+    parent_post = None
+    children_posts = []

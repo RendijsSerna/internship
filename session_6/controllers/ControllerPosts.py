@@ -1,3 +1,5 @@
+import functools
+
 import flask
 from flask import request, redirect, url_for
 
@@ -15,6 +17,17 @@ class ControllerPosts:
         post = ModelPost()
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
+
+        #post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
+       # post_parent_id_by_title = []
+        #if len(post_hierarchy):
+       #     post_hierarchy_reduced = post_hierarchy + list(functools.reduce(
+       #         lambda a, b: a.children_posts + b.children_posts, post_hierarchy
+       #     ))
+       #     for cur_post in post_hierarchy_reduced:
+      #          post_parent_id_by_title.append(
+       #             (cur_post.post_id, cur_post.title)
+      #          )
 
         if request.method == "POST":
             button_type = request.form.get("button_type")
@@ -36,7 +49,9 @@ class ControllerPosts:
 
         return flask.render_template(
             'posts/edit.html',
-            post=post
+            post=post,
+      #      post_parent_id_by_title=post_parent_id_by_title
+
         )
 
     @staticmethod

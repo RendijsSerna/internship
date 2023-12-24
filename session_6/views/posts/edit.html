@@ -1,14 +1,8 @@
-<html>
-    <head>
-        <style type="text/css">
-            body {
-                background-color: lightgray;
-            }
-        </style>
-        <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
-    </head>
+{% extends "layouts/base.html" %}
+{% block content %}
+
     <body>
-        <h1>New post</h1>
+        <div id="title">New post</div>
         <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST">
 
             <label>Title</label>
@@ -24,4 +18,5 @@
             <input type="submit" value="Save" />
         </form>
     </body>
-</html>
+
+{% endblock %}
