@@ -116,3 +116,11 @@ class ControllerDatabase:
         except Exception as exc:
             print(exc)
         return posts
+
+    @staticmethod
+    def test():
+        with UtilDatabaseCursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM tags"
+            )
+

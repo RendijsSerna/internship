@@ -1,5 +1,6 @@
 html {
     font-family: "Arial";
+    background-color: aliceblue;
 }
 
 
@@ -65,8 +66,8 @@ div.div-contents > div > div:last-child{
     border-right-width: 1px;
 }
 
-div.div-contents > div > tr:last-child {
-    background-color: crimson;
+div.div-contents > div:last-child > div {
+    border-bottom-width: 1px;
 }
 
 div.div-contents > div.div-header{
@@ -95,6 +96,6 @@ a.button{
     font-size: 40px;
 }
 
-#message {
+.message {
     color: crimson;
 }

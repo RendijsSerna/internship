@@ -20,7 +20,7 @@ def home():
 
     posts = ControllerDatabase.ControllerDatabase.get_all_posts()
 
-    return flask.render_template('posts/index.html', message=message, posts=posts)
+    return flask.render_template('posts/home.html', message=message, posts=posts)
 
 
 app.run(

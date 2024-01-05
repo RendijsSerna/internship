@@ -1,7 +1,7 @@
 import enum
 
 
-class EnumPostStatus(enum.Enum):
+class EnumPostStatus(str, enum.Enum):
     not_set = 'not_set'
     draft = 'draft'
     published = 'published'
