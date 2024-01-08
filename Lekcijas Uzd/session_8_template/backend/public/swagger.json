@@ -1,0 +1,221 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserLoginResponse": {
+				"properties": {
+					"session_token": {
+						"type": "string"
+					},
+					"is_success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"session_token",
+					"is_success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserLoginRequest": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"username",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Habit": {
+				"properties": {
+					"habit_id": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"description": {
+						"type": "string"
+					},
+					"number_of_times_in_week": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"description",
+					"number_of_times_in_week"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HabitsResponse": {
+				"properties": {
+					"is_success": {
+						"type": "boolean"
+					},
+					"habits": {
+						"items": {
+							"$ref": "#/components/schemas/Habit"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"is_success",
+					"habits"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HabitsRequest": {
+				"properties": {
+					"session_token": {
+						"type": "string"
+					},
+					"habits": {
+						"items": {
+							"$ref": "#/components/schemas/Habit"
+						},
+						"type": "array"
+					},
+					"modified": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"session_token",
+					"habits",
+					"modified"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "backend",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/dummy/DummyFunction": {
+			"post": {
+				"operationId": "DummyFunction",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "input_name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "something",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/users/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserLoginResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserLoginRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/habits/update": {
+			"post": {
+				"operationId": "Update",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HabitsResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/HabitsRequest"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
