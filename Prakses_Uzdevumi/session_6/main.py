@@ -20,6 +20,13 @@ def home():
     if params_GET.get("edited"):
         message = 2
 
+    test = ControllerDatabase.get_tags()
+    print(test)
+    test2 = ControllerDatabase.get_tags(1)
+    print(test2)
+
+
+
     return flask.render_template(
         'home_div.html',
         message=message,

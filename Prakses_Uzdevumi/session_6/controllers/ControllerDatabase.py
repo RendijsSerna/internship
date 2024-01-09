@@ -1,6 +1,7 @@
 from models.ModelPost import ModelPost
 import sqlite3
 
+from models.ModelTag import ModelTag
 from utils.UtilDatabaseCursor import UtilDatabaseCursor
 
 
@@ -118,9 +119,90 @@ class ControllerDatabase:
         return posts
 
     @staticmethod
-    def test():
-        with UtilDatabaseCursor() as cursor:
-            cursor.execute(
-                "SELECT * FROM tags"
-            )
+    def get_tags(post_id: int = None):
+        tags = []
 
+        try:
+            if post_id:
+                with UtilDatabaseCursor() as cursor:
+                    query = cursor.execute(
+                        "SELECT tags.tags_id ,name   FROM Tags_Posts_Connection"
+                        " INNER JOIN tags ON  Tags_Posts_Connection.tags_id = tags.tags_id "
+                        " WHERE post_id = ? ",
+                        [post_id],
+
+                    )
+            else:
+                with UtilDatabaseCursor() as cursor:
+                    query = cursor.execute(
+                        "SELECT *   FROM tags"
+
+                    )
+
+            if query.rowcount:
+                col_names = [it[0] for it in query.description]
+                for row in query.fetchall():
+                    tag = ModelTag()
+                    for key, value in zip(col_names, row):
+                        if key == "tags_id":
+                            tag.tags_id = value
+                        elif key == "name":
+                            tag.name = value
+
+                    tags.append(tag)
+
+
+
+
+        except Exception as exc:
+            print(exc)
+        return tags
+
+    @staticmethod
+    def create_link_posts_Tags(post_id, tags_id):
+
+        isSuccess = False
+        try:
+            with ControllerDatabase.__connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO Tags_Posts_Connection (post_id, tags_id)  VALUES (?, ?) ",
+                    [post_id, tags_id]
+
+                )
+                isSuccess = True
+
+        except Exception as exc:
+            print(exc)
+        return isSuccess
+
+
+    @staticmethod
+    def get_all_tags():
+        tags = []
+
+        try:
+            with UtilDatabaseCursor() as cursor:
+                query = cursor.execute(
+                    "SELECT *   FROM tags"
+
+                )
+
+                if query.rowcount:
+                    col_names = [it[0] for it in query.description]
+                    for row in query.fetchall():
+                        tag = ModelTag()
+                        for key, value in zip(col_names, row):
+                            if key == "tags_id":
+                                tag.tags_id = value
+                            elif key == "name":
+                                tag.name = value
+
+                        tags.append(tag)
+
+
+
+
+        except Exception as exc:
+            print(exc)
+        return tags

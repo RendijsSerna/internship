@@ -5,6 +5,7 @@ from flask import request, redirect, url_for
 
 from controllers.ControllerDatabase import ControllerDatabase
 from models.ModelPost import ModelPost
+from models.ModelTag import ModelTag
 
 
 class ControllerPosts:
@@ -15,9 +16,10 @@ class ControllerPosts:
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
         redirect_url = None
-        post = ModelPost()
+        tags = ControllerDatabase.get_tags(post_id)
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
+
 
         # post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
         # post_parent_id_by_title = []
@@ -47,21 +49,24 @@ class ControllerPosts:
                 post_id = ControllerDatabase.insert_post(post)
 
         if redirect_url:
-            result =  redirect(redirect_url)
+            result = redirect(redirect_url)
         else:
             result = flask.render_template(
                 'posts/edit.html',
                 post=post,
+                tags=tags
                 #      post_parent_id_by_title=post_parent_id_by_title
 
             )
-        return  result
+        return result
 
     @staticmethod
     @blueprint.route("/view/<url_slug>", methods=["GET"])
     def post_view(url_slug):
         post = ControllerDatabase.get_post(url_slug=url_slug)
+        tags = ControllerDatabase.get_tags(post.post_id)
         return flask.render_template(
             'posts/view.html',
-            post=post
+            post=post,
+            tags=tags
         )

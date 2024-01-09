@@ -8,6 +8,17 @@
         <p>
             {{ post.body }}
         </p>
+
+        {% for tag in tags %}
+            <div>
+                <div>{{ tag.tags_id }} {{ tag.name }}</div>
+                <div></div>
+
+
+            </div>
+        {% endfor %}
+
+
         <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST">
             <input type="hidden" value="delete" name="button_type" />
             <input type="submit" value="Delete" name="button_submit" />
