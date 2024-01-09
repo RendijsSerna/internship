@@ -1,0 +1,18 @@
+{% extends "posts/base.html" %}
+{% block title %}View{% endblock %}
+{% block head %}
+  {{ super() }}
+
+{% endblock %}
+{% block content %}
+
+   <h1>{{ post.title }}</h1>
+        <p>
+            {{ post.body }}
+        </p>
+        <form action="{{ url_for('posts.post_edit' , post_id=post.post_id)}}" method="POST">
+            <input type="submit" value="Delete" name="button_type" >
+             <input type="submit" value="Edit" name="button_type" >
+        </form>
+
+{% endblock %}

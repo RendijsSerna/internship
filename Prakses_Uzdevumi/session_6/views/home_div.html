@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %}
+{% block title %}Table {% endblock %}
+
+{% block content %}
+    {% if message  == 1   %}
+       <div class="message">Post Deleted</div>
+    {% elif message == 2 %}
+        <div class="message">Post Edited</div>
+    {% endif %}
+    <div class="div-contents" >
+        <div class="div-header" >
+            <div>Title</div>
+            <div>Updated</div>
+            <div>Edit</div>
+        </div>
+         {% for post in posts %}
+            <div>
+                <div>{{ post.title }}</a></div>
+                <div>{{ post.modified }}</div>
+                <div><a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a></div>
+            </div>
+        {% endfor %}
+    </div>
+  <a class="button" href="{{url_for('posts.post_edit')}}" >Add new post</a>
+{% endblock %}

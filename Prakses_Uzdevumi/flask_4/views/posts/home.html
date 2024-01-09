@@ -1,0 +1,22 @@
+{% extends "posts/base.html" %}
+{% block title %}home{% endblock %}
+{% block head %}
+  {{ super() }}
+
+{% endblock %}
+{% block content %}
+
+   {% if message|length > 0 %}
+       <div id="message"> {{ message }}</div>
+    {% endif %}
+     <tbody>
+        {% for post in posts %}
+
+                <td>{{ post.title }}</td>
+                <td>{{ post.modified }}</td>
+                <p></p>
+
+        {% endfor %}
+    </tbody>
+
+{% endblock %}

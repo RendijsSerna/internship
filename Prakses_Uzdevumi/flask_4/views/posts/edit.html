@@ -1,0 +1,26 @@
+{% extends "posts/base.html" %}\
+ {% for post in posts %}
+{% block title %}posts{% endblock %}
+{% endfor %}
+{% block head %}
+  {{ super() }}
+
+{% endblock %}
+{% block content %}
+
+      <form action="{{ url_for('posts.post_edit') }}" method="POST">
+            <label>Title</label>
+            <input type="text" name="post_title" />
+
+
+            <label>Body</label>
+            <textarea  name="post_body"></textarea>
+
+            <label>Url slug</label>
+            <input type="text" name="url_slug" />
+
+
+            <input type="submit" value="Save" />
+        </form>
+
+{% endblock %}
