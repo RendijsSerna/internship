@@ -52,12 +52,12 @@ class ControllerDatabase:
                 cursor = conn.cursor()
                 if post_id:
                     query = cursor.execute(
-                        "SELECT * FROM posts WHERE post_id = :post_id LIMIT 1;",
+                        "SELECT * FROM posts WHERE post_id = :post_id AND isDeleted = False LIMIT 1 ;",
                         {'post_id': post_id}
                     )
                 else:
                     query = cursor.execute(
-                        "SELECT * FROM posts WHERE url_slug = :url_slug LIMIT 1;",
+                        "SELECT * FROM posts WHERE url_slug = :url_slug  AND isDeleted = False  LIMIT 1;",
                         {'url_slug': url_slug}
                     )
                 if query.rowcount:
@@ -73,7 +73,8 @@ class ControllerDatabase:
                         post.url_slug,
                         post.thumbnail_uuid,
                         post.status,
-                        post.parent_post_id
+                        post.parent_post_id,
+                        post.isDeleted
                     ) = col  # pythonic wat to copy one by one variable from one tuple to another tuple
                 cursor.close()
 
@@ -93,7 +94,7 @@ class ControllerDatabase:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "DELETE FROM posts WHERE post_id = ?;",
+                    "UPDATE posts SET  (isDeleted) =   (TRUE) WHERE post_id = :post_id  ;",
                     [post_id]
                 )
                 isSuccess = True
@@ -102,12 +103,13 @@ class ControllerDatabase:
         return isSuccess
 
     @staticmethod
-    def get_all_posts(parent_post_id=None):
+    def get_all_posts(parent_post_id=None) -> [ModelPost]:
         posts = []
         try:
             with UtilDatabaseCursor() as cursor:
                 cursor.execute(
-                    f"SELECT post_id FROM posts WHERE parent_post_id {'= ' if parent_post_id else 'IS'} ?",
+                    f"SELECT post_id FROM posts WHERE parent_post_id {'' if parent_post_id else 'IS'} ?"
+                    f" AND isDeleted = False",
                     [parent_post_id]
                 )
                 for post_id, in cursor.fetchall():

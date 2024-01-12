@@ -40,9 +40,25 @@ class ControllerPosts:
                 ControllerDatabase.delete_post(post_id)
                 redirect_url = '/?deleted=1'
 
-            post.title = request.form.get('post_title').strip()
-            post.body = request.form.get('post_body').strip()
-            post.url_slug = request.form.get('url_slug').strip()
+            post.title = request.form.get('post_title')
+            if post.title:
+                post.title = post.title.strip()
+            else:
+                post.title = "Not set"
+
+
+            post.body = request.form.get('post_body')
+            if post.body:
+                post.body = post.body.strip()
+            else:
+                post.body = "NotSet"
+
+
+            post.url_slug = request.form.get('url_slug')
+            if post.url_slug:
+                post.url_slug = post.url_slug.strip()
+            else:
+                post.url_slug = "Not set"
 
 
             selected_tags = request.form.getlist('selected_tags')

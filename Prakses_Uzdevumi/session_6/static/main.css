@@ -1,5 +1,5 @@
 html {
-    font-family: "Arial";
+    font-family: "Arial", serif;
     background-color: aliceblue;
 }
 
@@ -19,63 +19,83 @@ label, input, textarea {
 textarea {
     height: 200px;
 }
-.table-contents{
-    background-color: aliceblue;
-    border-spacing: 0;
-}
-.table-contents  td{
-    border-color: black;
-    border-width: 1px;
-    border-style: solid;
-    border-bottom-width: 0;
-    border-right-width: 0;
-    margin: 0;
-    padding: 5px;
-}
-table.table-contents tr td:last-child {
-     border-right-width: 1px;
-}
-table.table-contents tr:last-child td{
-     border-bottom-width: 1px;
-}
+/* just a reset of the css */
+body {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  margin: 10px;
+  padding: 15px;
 
+}
+.main-container {
 
+  width: 100%;
+  height: 100%;
+  display: flex;
+  margin: 0;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column
 
-div.div-contents > div > div {
-    float: left;
-    width: 200px;
-    padding: 5px;
 }
 
-div.div-contents > div > div:nth-child(3){
-    width: 60px;
+.table-container {
+     justify-content: flex-start;
+  display: flex;
+  flex-flow: column nowrap;
+  background-color: aliceblue ;
+  width: 80%;
+  margin: 0 auto;
+  border-radius: 4px;
+  border: 1px solid #DADADA;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, .08);
 }
 
-
-
-div.div-contents > div > div {
-    background-color: aquamarine;
-    border-color: rgb(128, 128, 128);
-    border-width: 1px;
-    border-style: solid;
-    border-bottom-width: 0;
-    border-right-width: 0;
+.table-row {
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  border-bottom: 1px solid #dadada;
 }
 
-div.div-contents > div > div:last-child{
-    border-right-width: 1px;
+.heading {
+  background-color: #ececec;
+  color: #3e3e3e;
+  font-weight: bold;
 }
 
-div.div-contents > div:last-child > div {
-    border-bottom-width: 1px;
+.row-item {
+  display: flex;
+  flex: 1;
+  font-size: 14px;
+  width: 20px;
+  padding: 8px 0;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.15s ease-in-out;
 }
 
-div.div-contents > div.div-header{
-    font-weight: bold;
+.row-item:hover {
+  cursor: pointer;
+  background-color: #F0F0F0;
+/*   box-shadow: 0px 1px 4px rgba(0, 0, 0, .08); */
 }
 
-div.div-contents > div{
-    clear: both;
+.row-sub-container {
+  display: flex;
+  flex-flow: column nowrap;
+  flex: 1;
+}
+
+.row-sub-container .row-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #dadada;
+}
+
+.table-row:last-child,
+.row-sub-container .row-item:last-child {
+  border-bottom: 0;
 }
 
 a.button{
