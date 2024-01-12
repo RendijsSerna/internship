@@ -16,10 +16,12 @@ class ControllerPosts:
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
         redirect_url = None
-        tags = ControllerDatabase.get_tags(post_id)
+        post = None
+        tags = ControllerDatabase.get_tags() # This is sketchy
+
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
-
+          #  tags = ControllerDatabase.get_tags(post.post_id)
 
         # post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
         # post_parent_id_by_title = []
@@ -41,6 +43,14 @@ class ControllerPosts:
             post.title = request.form.get('post_title').strip()
             post.body = request.form.get('post_body').strip()
             post.url_slug = request.form.get('url_slug').strip()
+
+
+            selected_tags = request.form.getlist('selected_tags')
+            if selected_tags:
+                for i in selected_tags:
+                    ControllerDatabase.create_link_posts_Tags(post_id, i)
+
+
 
             if post.post_id > 0:
                 ControllerDatabase.update_post(post)

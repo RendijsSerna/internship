@@ -20,10 +20,7 @@ def home():
     if params_GET.get("edited"):
         message = 2
 
-    test = ControllerDatabase.get_tags()
-    print(test)
-    test2 = ControllerDatabase.get_tags(1)
-    print(test2)
+
 
 
 

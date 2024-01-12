@@ -99,3 +99,9 @@ a.button{
 .message {
     color: crimson;
 }
+
+#Checkboxes {
+    display: flex;
+    clear: both;
+
+}
