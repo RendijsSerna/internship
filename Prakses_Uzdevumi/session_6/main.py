@@ -8,10 +8,8 @@ app = flask.Flask(__name__, template_folder='views')
 app.register_blueprint(ControllerPosts.blueprint)
 
 
-
 @app.route("/", methods=['GET'])
 def home():
-
     params_GET = flask.request.args
     message = 0
     posts = ControllerDatabase.get_all_posts()
@@ -20,18 +18,16 @@ def home():
     if params_GET.get("edited"):
         message = 2
 
-
-
-
-
     return flask.render_template(
         'home_div.html',
         message=message,
         posts=posts
     )
 
+
+
 app.run(
-    host='localhost', # localhost == 127.0.0.1
-    port=8000, # by default HTTP 80, HTTPS 443 // 8000, 8080
+    host='localhost',  # localhost == 127.0.0.1
+    port=8000,  # by default HTTP 80, HTTPS 443 // 8000, 8080
     debug=True
 )

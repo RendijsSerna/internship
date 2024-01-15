@@ -1,30 +1,32 @@
-{% extends "layouts/base.html" %}
-{% block title %}Table {% endblock %}
-
-{% block content %}
-    {% if message  == 1   %}
-       <div class="message">Post Deleted</div>
-    {% elif message == 2 %}
-        <div class="message">Post Edited</div>
-    {% endif %}
-    <div class="main-container">
-      <div class="table-container">
-        <div class="table-row heading">
-                <div class="row-item">Title</div>
-                <div class="row-item">Updated</div>
-                <div class="row-item">Edit</div>
-        </div>
-                  {% for post in posts %}
-          <div class="table-row">
-            <div class="row-item">{{ post.title }}</div>
-            <div class="row-item">{{ post.modified }}</div>
-            <div class="row-item"><a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a></div>
-          </div>
-        {% endfor %}
-
-        </div>
-        <div> <a class="button" href="{{url_for('posts.post_edit')}}" >Add new post</a></div>
+{% extends "layouts/base.html" %} {% block title %}Table {% endblock %} {% block
+content %} {% if message == 1 %}
+<div class="message">Post Deleted</div>
+{% elif message == 2 %}
+<div class="message">Post Edited</div>
+{% endif %}
+<div class="main-container">
+  <div class="table-container">
+    <div class="table-row heading">
+      <div class="row-item">Title</div>
+      <div class="row-item">Updated</div>
+      <div class="row-item">Edit</div>
     </div>
-<div class="table-container"> <a class="button" href="{{url_for('posts.post_edit')}}" >Add new post</a></div>
+    {% for post in posts %}
+    <div class="table-row">
+      <div class="row-item">{{ post.title }}</div>
+      <div class="row-item">{{ post.modified }}</div>
+      <div class="row-item">
+        <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <div>
+    <a class="button" href="{{url_for('posts.post_edit')}}">Add new post</a>
+  </div>
+</div>
+<div class="table-container">
+  <a class="button" href="{{url_for('posts.post_edit')}}">Add new post</a>
+</div>
 
 {% endblock %}

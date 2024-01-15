@@ -129,8 +129,8 @@ class ControllerDatabase:
                 if post_id:
 
                     query = cursor.execute(
-                        "SELECT tags.tags_id ,name   FROM Tags_Posts_Connection"
-                        " INNER JOIN tags ON  Tags_Posts_Connection.tags_id = tags.tags_id "
+                        "SELECT tags.tags_id ,name   FROM tags_posts_connection"
+                        " INNER JOIN tags ON  tags_posts_connection.tags_id = tags.tags_id "
                         " WHERE post_id = ?  ",
                         [post_id],
                     )
@@ -167,7 +167,7 @@ class ControllerDatabase:
                 with ControllerDatabase.__connection() as conn:
                     cursor = conn.cursor()
                     cursor.execute(
-                        "SELECT * FROM Tags_Posts_Connection WHERE post_id = ? AND tags_id = ?",
+                        "SELECT * FROM tags_posts_connection WHERE post_id = ? AND tags_id = ?",
                         [post_id, tags_id]
                     )
                     existing_link = cursor.fetchone()
@@ -176,12 +176,10 @@ class ControllerDatabase:
                         print("Link already exists")
                     else:
                         cursor.execute(
-                            "INSERT INTO Tags_Posts_Connection (post_id, tags_id)  VALUES (?, ?) ",
+                            "INSERT INTO tags_posts_connection (post_id, tags_id)  VALUES (?, ?) ",
                             [post_id, tags_id]
                         )
 
         except Exception as exc:
             print(exc)
         return isSuccess
-
-

@@ -17,11 +17,11 @@ class ControllerPosts:
     def post_edit(post_id=None):
         redirect_url = None
         post = None
-        tags = ControllerDatabase.get_tags() # This is sketchy
+        tags = ControllerDatabase.get_tags()  # This is sketchy
 
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
-          #  tags = ControllerDatabase.get_tags(post.post_id)
+        #  tags = ControllerDatabase.get_tags(post.post_id)
 
         # post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
         # post_parent_id_by_title = []
@@ -46,13 +46,11 @@ class ControllerPosts:
             else:
                 post.title = "Not set"
 
-
             post.body = request.form.get('post_body')
             if post.body:
                 post.body = post.body.strip()
             else:
                 post.body = "NotSet"
-
 
             post.url_slug = request.form.get('url_slug')
             if post.url_slug:
@@ -60,13 +58,10 @@ class ControllerPosts:
             else:
                 post.url_slug = "Not set"
 
-
             selected_tags = request.form.getlist('selected_tags')
             if selected_tags:
                 for i in selected_tags:
                     ControllerDatabase.create_link_posts_Tags(post_id, i)
-
-
 
             if post.post_id > 0:
                 ControllerDatabase.update_post(post)
