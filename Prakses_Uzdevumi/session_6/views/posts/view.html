@@ -1,21 +1,27 @@
-{% extends "layouts/base.html" %} {% block content %} {% if message | length > 0
-%} {{ message }} {% endif %}
-<div id="title">{{ post.title }}</div>
-<p>{{ post.body }}</p>
+{% extends "layouts/base.html" %}
+{% block content %}
 
-{% for tag in tags %}
-<div>
-  <div>{{ tag.tags_id }} {{ tag.name }}</div>
-  <div></div>
-</div>
-{% endfor %}
+    {% if message | length > 0  %}
+       {{ message }}
+    {% endif %}
+     <div id="title">{{ post.title }}</div>
+        <p>
+            {{ post.body }}
+        </p>
 
-<form
-  action="{{ url_for('posts.post_edit', post_id=post.post_id) }}"
-  method="POST"
->
-  <input type="hidden" value="delete" name="button_type" />
-  <input type="submit" value="Delete" name="button_submit" />
-</form>
-<a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
+        {% for tag in tags %}
+            <div>
+                <div>{{ tag.tags_id }} {{ tag.name }}</div>
+                <div></div>
+
+
+            </div>
+        {% endfor %}
+
+
+        <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST">
+            <input type="hidden" value="delete" name="button_type" />
+            <input type="submit" value="Delete" name="button_submit" />
+        </form>
+        <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
 {% endblock %}

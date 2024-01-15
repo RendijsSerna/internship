@@ -1,49 +1,47 @@
-{% extends "layouts/base.html" %} {% block title %} {% if post.post_id != 0 %}
-{{post.title}} {% else %} New Post {% endif %} {% endblock %} {% block content
-%}
+{% extends "layouts/base.html" %}
+{% block title %}
 
-<body>
-  <div id="title">
-    {% if post.post_id != 0 %} Edit {{post.title}} {% else %} New Post {% endif
-    %}
-  </div>
-  <form
-    action="{{ url_for('posts.post_edit', post_id=post.post_id) }}"
-    method="POST"
-  >
-    <label>Title</label>
-    <input type="text" name="post_title" value="{{post.title}}" />
+{% if post.post_id != 0 %}
+  {{post.title}}
+{% else %}
+  New Post
+{% endif %}
+{% endblock %}
+{% block content %}
 
-    <label>Body</label>
-    <textarea name="post_body">{{post.body}}</textarea>
+    <body>
+        <div id="title">
+            {% if post.post_id != 0 %}
+              Edit {{post.title}}
+            {% else %}
+              New Post
+            {% endif %}
+        </div>
+        <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST">
 
-    <label>Url slug</label>
-    <input type="text" name="url_slug" value="{{post.url_slug}}" />
+            <label>Title</label>
+            <input type="text" name="post_title" value="{{post.title}}" />
 
-    {% for tag in tags %}
-    <div id="Checkboxes">
-      <input
-        type="checkbox"
-        id="{{ tag.tags_id }}"
-        name="selected_tags"
-        value="{{ tag.tags_id }}"
-        {%
-        if
-        tag.tags_id=""
-        ="3"
-        %}
-        checked
-        {%
-        endif
-        %}
-      />
+            <label>Body</label>
+            <textarea name="post_body">{{post.body}}</textarea>
 
-      <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
-    </div>
-    {% endfor %}
+            <label>Url slug</label>
+            <input type="text" name="url_slug" value="{{post.url_slug}}" />
 
-    <input type="submit" value="Save" />
-  </form>
-</body>
+
+            {% for tag in tags %}
+                <div id="Checkboxes">
+                        <input type="checkbox" id="{{ tag.tags_id }}" name="selected_tags" value="{{ tag.tags_id }}"
+                               {% if tag.tags_id == 3 %} checked {% endif %}>
+
+                        <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
+                </div>
+            {% endfor %}
+
+
+
+            <input type="submit" value="Save" />
+        </form>
+    </body>
 
 {% endblock %}
