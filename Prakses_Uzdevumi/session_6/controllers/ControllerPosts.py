@@ -16,7 +16,7 @@ class ControllerPosts:
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
         redirect_url = None
-        post = None
+        post = ModelPost
         tags = ControllerDatabase.get_tags()  # This is sketchy
 
         if post_id is not None:
@@ -44,7 +44,7 @@ class ControllerPosts:
             if post.title:
                 post.title = post.title.strip()
             else:
-                post.title = "Not set"
+                raise ValueError("Post body must be provided")
 
             post.body = request.form.get('post_body')
             if post.body:
@@ -58,16 +58,16 @@ class ControllerPosts:
             else:
                 post.url_slug = "Not set"
 
-            selected_tags = request.form.getlist('selected_tags')
-            if selected_tags:
-                for i in selected_tags:
-                    ControllerDatabase.create_link_posts_Tags(post_id, i)
-
             if post.post_id > 0:
                 ControllerDatabase.update_post(post)
                 redirect_url = f"/?edited={post.url_slug}"
             else:
-                post_id = ControllerDatabase.insert_post(post)
+                post.post_id = ControllerDatabase.insert_post(post)
+
+            selected_tags = request.form.getlist('selected_tags')
+            if selected_tags:
+                for i in selected_tags:
+                    ControllerDatabase.create_link_posts_Tags(post.post_id, i)
 
         if redirect_url:
             result = redirect(redirect_url)
