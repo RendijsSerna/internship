@@ -131,7 +131,7 @@ class ControllerDatabase:
                     query = cursor.execute(
                         "SELECT tags.tags_id ,name   FROM tags_posts_connection"
                         " INNER JOIN tags ON  tags_posts_connection.tags_id = tags.tags_id "
-                        " WHERE post_id = ?  ",
+                        " WHERE post_id = ?  AND is_deleted = 0",
                         [post_id],
                     )
                 else:
@@ -167,19 +167,59 @@ class ControllerDatabase:
                 with ControllerDatabase.__connection() as conn:
                     cursor = conn.cursor()
                     cursor.execute(
-                        "SELECT * FROM tags_posts_connection WHERE post_id = ? AND tags_id = ?",
+                        "SELECT COUNT(*) FROM tags_posts_connection WHERE post_id = ? AND tags_id = ?"
+                        " LIMIT 1",
                         [post_id, tags_id]
                     )
-                    existing_link = cursor.fetchone()
+                    count = cursor.fetchone()[0]
 
-                    if existing_link:
-                        print("Link already exists")
-                    else:
+                    if count > 0:
+                        # Link already exists, check if it is deleted and swap is_deleted to 0
                         cursor.execute(
-                            "INSERT INTO tags_posts_connection (post_id, tags_id)  VALUES (?, ?) ",
+                            "UPDATE tags_posts_connection SET is_deleted = 0 WHERE post_id = ? AND tags_id = ?"
+                            " AND is_deleted = 1",
                             [post_id, tags_id]
                         )
+                        conn.commit()
+                        print("Link already exists. Swapped is_deleted to 0.")
+                    else:
+                        cursor.execute(
+                            "INSERT INTO tags_posts_connection (post_id, tags_id) VALUES (?, ?)",
+                            [post_id, tags_id]
+                        )
+                        isSuccess = True
 
         except Exception as exc:
             print(exc)
         return isSuccess
+
+    @staticmethod
+    def tags_with_connection(post_id):
+        tags_with_con = []
+        try:
+            with ControllerDatabase.__connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "SELECT tags_id FROM tags_posts_connection WHERE post_id = ? AND is_deleted = 0  ",
+                    [post_id]
+                )
+                results = cursor.fetchall()
+                for result in results:
+                    tags_with_con.append(result[0])
+        except Exception as exc:
+            print(exc)
+        return tags_with_con
+
+    @staticmethod
+    def delete_post_tags_connection(post_id, tags_id):
+        try:
+            with ControllerDatabase.__connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "UPDATE tags_posts_connection SET is_deleted = 1 WHERE post_id = ?"
+                    " AND tags_id = ? ",
+                    [post_id, tags_id]
+                )
+                conn.commit()
+        except Exception as exc:
+            print(exc)

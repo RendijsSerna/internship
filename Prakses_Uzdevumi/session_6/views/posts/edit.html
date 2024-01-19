@@ -31,10 +31,9 @@
 
             {% for tag in tags %}
                 <div id="Checkboxes">
-                        <input type="checkbox" id="{{ tag.tags_id }}" name="selected_tags" value="{{ tag.tags_id }}"
-                               {% if tag.tags_id == 3 %} checked {% endif %}>
-
-                        <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
+                    <input type="checkbox" id="{{ tag.tags_id }}" name="selected_tags" value="{{ tag.tags_id }}"
+                           {% if tag.tags_id in tags_with_connection %} checked {% endif %}>
+                    <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
                 </div>
             {% endfor %}
 

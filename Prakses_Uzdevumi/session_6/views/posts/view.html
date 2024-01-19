@@ -23,5 +23,9 @@
             <input type="hidden" value="delete" name="button_type" />
             <input type="submit" value="Delete" name="button_submit" />
         </form>
-        <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
+            <div>
+              <img src="../../static/images/imagew.png" alt="Uploaded Picture" class="image">
+            </div>
+
+            <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
 {% endblock %}
