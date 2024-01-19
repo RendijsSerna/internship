@@ -11,12 +11,12 @@ app.register_blueprint(ControllerPosts.blueprint)
 @app.route("/", methods=['GET'])
 def home():
     params_GET = flask.request.args
-    message = 0
+    message = ""
     posts = ControllerDatabase.get_all_posts()
     if params_GET.get("deleted"):
-        message = 1
+        message = "deleted"
     if params_GET.get("edited"):
-        message = 2
+        message = "edited"
 
     return flask.render_template(
         'home_div.html',
