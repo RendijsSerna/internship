@@ -1,11 +1,12 @@
 import flask
-from flask import url_for
 
+from configs import Configs
 from controllers.ControllerDatabase import ControllerDatabase
 from controllers.ControllerPosts import ControllerPosts
 
 app = flask.Flask(__name__, template_folder='views')
 app.register_blueprint(ControllerPosts.blueprint)
+app.config.from_object(Configs)
 
 
 @app.route("/", methods=['GET'])
@@ -23,7 +24,6 @@ def home():
         message=message,
         posts=posts
     )
-
 
 
 app.run(

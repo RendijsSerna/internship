@@ -1,46 +1,36 @@
 {% extends "layouts/base.html" %}
 {% block title %}
-
-{% if post.post_id != 0 %}
-  {{post.title}}
-{% else %}
-  New Post
-{% endif %}
+  {% if post.post_id != 0 %}
+    {{post.title}}
+  {% else %}
+    New Post
+  {% endif %}
 {% endblock %}
 {% block content %}
-
-    <body>
-        <div id="title">
-            {% if post.post_id != 0 %}
-              Edit {{post.title}}
-            {% else %}
-              New Post
-            {% endif %}
+  <body>
+    <div id="title">
+      {% if post.post_id != 0 %}
+        Edit {{post.title}}
+      {% else %}
+        New Post
+      {% endif %}
+    </div>
+    <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST" enctype="multipart/form-data">
+      <label>Title</label>
+      <input type="text" name="post_title" value="{{post.title}}" />
+      <label>Body</label>
+      <textarea name="post_body">{{post.body}}</textarea>
+      <label>Url slug</label>
+      <input type="text" name="url_slug" value="{{post.url_slug}}" />
+      {% for tag in tags %}
+        <div id="Checkboxes">
+          <input type="checkbox" id="{{ tag.tags_id }}" name="selected_tags" value="{{ tag.tags_id }}"
+                 {% if tag.tags_id in tags_with_connection %} checked {% endif %}>
+          <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
         </div>
-        <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST">
-
-            <label>Title</label>
-            <input type="text" name="post_title" value="{{post.title}}" />
-
-            <label>Body</label>
-            <textarea name="post_body">{{post.body}}</textarea>
-
-            <label>Url slug</label>
-            <input type="text" name="url_slug" value="{{post.url_slug}}" />
-
-
-            {% for tag in tags %}
-                <div id="Checkboxes">
-                    <input type="checkbox" id="{{ tag.tags_id }}" name="selected_tags" value="{{ tag.tags_id }}"
-                           {% if tag.tags_id in tags_with_connection %} checked {% endif %}>
-                    <label for="{{ tag.tags_id }}">{{ tag.name }}</label>
-                </div>
-            {% endfor %}
-
-
-
-            <input type="submit" value="Save" />
-        </form>
-    </body>
-
+      {% endfor %}
+      <input type="file" name="image">
+      <input type="submit" value="Save" />
+    </form>
+  </body>
 {% endblock %}

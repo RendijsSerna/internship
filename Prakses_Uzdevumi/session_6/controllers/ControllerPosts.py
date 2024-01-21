@@ -1,11 +1,15 @@
 import functools
+import os.path
 
 import flask
 from flask import request, redirect, url_for
 
 from controllers.ControllerDatabase import ControllerDatabase
+
 from models.ModelPost import ModelPost
 from models.ModelTag import ModelTag
+from utils.UtilStrings import generate_random_uuid
+
 
 class ControllerPosts:
     blueprint = flask.Blueprint("posts", __name__, url_prefix="/posts")
@@ -59,6 +63,11 @@ class ControllerPosts:
             else:
                 raise ValueError("Postam ir nepieciesams url_slug")
 
+            file = request.files['image']
+            if file:
+                post.thumbnail_uuid = generate_random_uuid()
+                file.save(os.path.join(app.config['IMAGE_INSERT'], post.thumbnail_uuid))
+
             if post.post_id > 0:
                 ControllerDatabase.update_post(post)
                 redirect_url = f"/?edited={post.url_slug}"
@@ -89,7 +98,7 @@ class ControllerPosts:
                 'posts/edit.html',
                 post=post,
                 tags=tags,
-                tags_with_connection= tags_with_connection
+                tags_with_connection=tags_with_connection
                 #      post_parent_id_by_title=post_parent_id_by_title
 
             )

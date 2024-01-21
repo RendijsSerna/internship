@@ -18,8 +18,8 @@ class ControllerDatabase:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "INSERT INTO posts (body, title, url_slug, parent_post_id) "
-                    "VALUES (:title, :body, :url_slug, :parent_post_id);",
+                    "INSERT INTO posts (body, title, url_slug, parent_post_id, thumbnail_uuid) "
+                    "VALUES (:title, :body, :url_slug, :parent_post_id, :thumbnail_uuid);",
                     post.__dict__
                 )
                 post_id = cursor.execute("SELECT last_insert_rowid()").fetchone()[0]
@@ -34,8 +34,9 @@ class ControllerDatabase:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "UPDATE posts SET (title, body, url_slug, parent_post_id) = "
-                    "(:title, :body, :url_slug, :parent_post_id) WHERE post_id = :post_id",
+                    "UPDATE posts SET (title, body, url_slug, parent_post_id, thumbnail_uuid) = "
+                    "(:title, :body, :url_slug, :parent_post_id, :thumbnail_uuid)"
+                    " WHERE post_id = :post_id",
                     post.__dict__
 
                 )
