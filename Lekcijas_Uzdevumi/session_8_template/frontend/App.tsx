@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from "react";
+import React, { useState } from "react";
 import {
 	Button,
 	SafeAreaView,
@@ -37,13 +37,15 @@ const Stack = createNativeStackNavigator();
 const Tabs = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
+		const [countHabits, setCountHabits] = useState(0);
+
 	return <NavigationContainer>
 		<Tabs.Navigator>
 			<Tabs.Screen name={"TabHome"} component={ScreenHome} options={{headerShown: false}}></Tabs.Screen>
 			<Tabs.Screen name={"Habits"} options={{headerShown: false}} children={() => (
 				<Stack.Navigator initialRouteName={"Habits"}>
-					<Stack.Screen name={"Habits"} children={()=> <ScreenHabits title={"Habits"} /> }/>
-					<Stack.Screen name={"Stats"} children={()=> <ScreenStats countHabits={0} /> }/>
+					<Stack.Screen name={"Habits"} children={()=> <ScreenHabits title={"Habits"} onHabitsCountChange={setCountHabits}/> }/>
+					<Stack.Screen name={"Stats"} children={()=> <ScreenStats countHabits={countHabits} countHabitsCompleted={0} countHabitsNotCompleted={0} /> }/>
 
 					</Stack.Navigator>
 			)} />

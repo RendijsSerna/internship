@@ -9,33 +9,41 @@ import { ComponentHabit } from "../components/ComponentHabit";
 
 interface Props {
 	title: string;
+	onHabitsCountChange: (count: number) => void;
 }
 export const ScreenHabits = (props: Props): React.JSX.Element => {
 	const [habits, setHabits] = useState<Habit[]>([]);
 	const navigation = useNavigation<NavigationProp<any>>();
 	const route = useRoute();
+	const updateHabitsCountChange= () => {
+		props.onHabitsCountChange(habits.length)
+	};
 
 	useEffect(() => {
-		// constructor
-		// TODO: get habits from backend
-		setHabits([
-			{
-				habit_id: 0,
-				user_id: 0,
-				description: "Read book",
-				number_of_times_in_week: 3,
-			},
-			{
-				habit_id: 1,
-				user_id: 0,
-				description: "Go to gym",
-				number_of_times_in_week: 2,
-			},
-		]);
-		return () => {
-			// destructor
-		};
-	}, []); // only on first render
+			// constructor
+			// TODO: get habits from backend
+			const initialHabits=([
+				{
+					habit_id: 0,
+					user_id: 0,
+					description: "Read book",
+					number_of_times_in_week: 3
+				},
+				{
+					habit_id: 1,
+					user_id: 0,
+					description: "Go to gym",
+					number_of_times_in_week: 2
+				}
+			]);
+
+			setHabits(initialHabits);
+			props.onHabitsCountChange(initialHabits.length);
+			return () => {
+				// destructor
+			};
+		},
+		[]); // only on first render
 	const onAddHabit = () => {
 		setHabits([
 			...habits,
