@@ -6,6 +6,7 @@ import {ScreenHabits} from '../screens/ScreenHabits.tsx';
 interface Props {
   habit: Habit;
   onHabitChange: (habit: Habit) => void;
+  onHabitDelete: (habit_id: number) =>void;
 }
 
 export const ComponentHabit = (props: Props): React.JSX.Element => {
@@ -18,12 +19,8 @@ export const ComponentHabit = (props: Props): React.JSX.Element => {
   const onEditHabit = () => {
     setIsEditing(true);
   };
-  const onDeleteHabit = () => {
-    props.onHabitChange({
-      habit_id: props.habit.habit_id,
-      description: '',
-      number_of_times_in_week: 0,
-    } as Habit);
+  const onDeleteHabit = (habit_id: number) => {
+    props.onHabitDelete(habit_id);
   };
 
   const onSaveHabit = () => {
@@ -33,6 +30,13 @@ export const ComponentHabit = (props: Props): React.JSX.Element => {
       number_of_times_in_week: times_per_week,
       description: habitDesc.trim(),
     } as Habit);
+  };
+  const handleTextInput = (text: string) => {
+    let numberInput = parseInt(text);
+    if (!isNaN(numberInput)) {
+      numberInput = Math.min(Math.max(1, numberInput), 10);
+      setTimesPerWeek(numberInput);
+    }
   };
 
   return (
@@ -54,13 +58,7 @@ export const ComponentHabit = (props: Props): React.JSX.Element => {
               {habitDesc}
             </TextInput>
             <TextInput
-              onChangeText={text => {
-                let numberInput = parseInt(text);
-                if (!isNaN(numberInput)) {
-                  numberInput = Math.min(Math.max(1, numberInput), 10);
-                  setTimesPerWeek(numberInput);
-                }
-              }}
+              onChangeText={(text) => handleTextInput(text)}
               keyboardType="numeric">
               {times_per_week}
             </TextInput>
