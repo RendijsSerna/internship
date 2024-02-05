@@ -8,7 +8,7 @@ from controllers.ControllerDatabase import ControllerDatabase
 
 from models.ModelPost import ModelPost
 from models.ModelTag import ModelTag
-from utils.UtilStrings import generate_random_uuid
+from utils.UtilStrings import UtilStrings
 
 
 class ControllerPosts:
@@ -18,10 +18,10 @@ class ControllerPosts:
     @blueprint.route("/new", methods=["POST", "GET"])
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
-        tags_with_connection = None
+
         redirect_url = None
         post = ModelPost
-        tags = ControllerDatabase.get_tags()  # This is sketchy
+        tags = ControllerDatabase.get_tags()
         tags_with_connection = ControllerDatabase.tags_with_connection(post_id)
 
         if post_id is not None:
@@ -29,7 +29,7 @@ class ControllerPosts:
         #  tags = ControllerDatabase.get_tags(post.post_id)
 
         # post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
-        # post_parent_id_by_title = []
+        # post_parent_id_by_title = []S
         # if len(post_hierarchy):
         #     post_hierarchy_reduced = post_hierarchy + list(functools.reduce(
         #         lambda a, b: a.children_posts + b.children_posts, post_hierarchy
@@ -65,8 +65,9 @@ class ControllerPosts:
 
             file = request.files['image']
             if file:
-                post.thumbnail_uuid = generate_random_uuid()
-                file.save(os.path.join(app.config['IMAGE_INSERT'], post.thumbnail_uuid))
+                post.thumbnail_uuid = UtilStrings.generate_random_uuid()
+                test = f"static/images/{post.thumbnail_uuid}.png"
+                file.save(test)
 
             if post.post_id > 0:
                 ControllerDatabase.update_post(post)
@@ -75,19 +76,19 @@ class ControllerPosts:
                 post.post_id = ControllerDatabase.insert_post(post)
 
             selected_tags = request.form.getlist('selected_tags')
+
             if selected_tags:
                 tags = ControllerDatabase.tags_with_connection(post.post_id)
+
+                for tag in tags:
+                    ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
+
                 for tag_id in selected_tags:
-                    if tag_id not in tags:
-                        ControllerDatabase.create_link_posts_Tags(post.post_id, tag_id)
-                    else:
-                        # Tag already exists, do nothing
-                        pass
-                    # Delete tag connection if it exists but not in selected_tags
-                    for tag in tags:
-                        if tag not in selected_tags:
-                            ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
+                    ControllerDatabase.create_link_posts_Tags(post.post_id, tag_id)
+
             else:
+                tags = ControllerDatabase.tags_with_connection(post.post_id)
+
                 for tag in tags:
                     ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
 

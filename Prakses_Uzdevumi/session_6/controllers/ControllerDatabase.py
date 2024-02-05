@@ -128,7 +128,6 @@ class ControllerDatabase:
         try:
             with UtilDatabaseCursor() as cursor:
                 if post_id:
-
                     query = cursor.execute(
                         "SELECT tags.tags_id ,name   FROM tags_posts_connection"
                         " INNER JOIN tags ON  tags_posts_connection.tags_id = tags.tags_id "
@@ -138,7 +137,6 @@ class ControllerDatabase:
                 else:
                     query = cursor.execute(
                         "SELECT *   FROM tags"
-
                     )
 
                 if query.rowcount:
@@ -152,8 +150,6 @@ class ControllerDatabase:
                                 tag.name = value
 
                         tags.append(tag)
-
-
 
 
         except Exception as exc:
@@ -175,15 +171,15 @@ class ControllerDatabase:
                     count = cursor.fetchone()[0]
 
                     if count > 0:
-                        # Link already exists, check if it is deleted and swap is_deleted to 0
+                        # Link already exists. Swapped is_deleted to 0
                         cursor.execute(
                             "UPDATE tags_posts_connection SET is_deleted = 0 WHERE post_id = ? AND tags_id = ?"
                             " AND is_deleted = 1",
                             [post_id, tags_id]
                         )
                         conn.commit()
-                        print("Link already exists. Swapped is_deleted to 0.")
                     else:
+                        # Creates new link
                         cursor.execute(
                             "INSERT INTO tags_posts_connection (post_id, tags_id) VALUES (?, ?)",
                             [post_id, tags_id]
