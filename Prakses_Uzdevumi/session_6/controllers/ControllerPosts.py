@@ -19,6 +19,7 @@ class ControllerPosts:
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
     def post_edit(post_id=None):
 
+
         redirect_url = None
         post = ModelPost
         tags = ControllerDatabase.get_tags()
@@ -26,18 +27,11 @@ class ControllerPosts:
 
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
-        #  tags = ControllerDatabase.get_tags(post.post_id)
 
-        # post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id=None)
-        # post_parent_id_by_title = []S
-        # if len(post_hierarchy):
-        #     post_hierarchy_reduced = post_hierarchy + list(functools.reduce(
-        #         lambda a, b: a.children_posts + b.children_posts, post_hierarchy
-        #     ))
-        #     for cur_post in post_hierarchy_reduced:
-        #          post_parent_id_by_title.append(
-        #             (cur_post.post_id, cur_post.title)
-        #          )
+        post_flattened = ControllerDatabase.get_all_posts_flattened(parent_post_id=None)
+        post_parent_id_and_title = [
+            (None, "No parent")
+        ]
 
         if request.method == "POST":
             button_type = request.form.get("button_type")
@@ -66,7 +60,7 @@ class ControllerPosts:
             file = request.files['image']
             if file:
                 post.thumbnail_uuid = UtilStrings.generate_random_uuid()
-                test = f"static/images/{post.thumbnail_uuid}.png"
+                test = f"uploads/images/{post.thumbnail_uuid}.png"
                 file.save(test)
 
             if post.post_id > 0:
@@ -84,7 +78,7 @@ class ControllerPosts:
                     ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
 
                 for tag_id in selected_tags:
-                    ControllerDatabase.create_link_posts_Tags(post.post_id, tag_id)
+                    ControllerDatabase.create_link_posts_tags(post.post_id, tag_id)
 
             else:
                 tags = ControllerDatabase.tags_with_connection(post.post_id)

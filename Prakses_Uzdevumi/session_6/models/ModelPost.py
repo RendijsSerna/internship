@@ -16,5 +16,6 @@ class ModelPost:
     isDeleted: int = 0
 
     parent_post_id: int = None
-    parent_post = None
     children_posts = []
+    depth: int = 0
+

@@ -90,7 +90,7 @@ class ControllerDatabase:
 
     @staticmethod
     def delete_post(post_id: int) -> bool:
-        isSuccess = False
+        is_success = False
         try:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
@@ -98,10 +98,10 @@ class ControllerDatabase:
                     "UPDATE posts SET  (isDeleted) =   (TRUE) WHERE post_id = :post_id  ;",
                     [post_id]
                 )
-                isSuccess = True
+                is_success = True
         except Exception as exc:
             print(exc)
-        return isSuccess
+        return is_success
 
     @staticmethod
     def get_all_posts(parent_post_id=None) -> [ModelPost]:
@@ -157,8 +157,8 @@ class ControllerDatabase:
         return tags
 
     @staticmethod
-    def create_link_posts_Tags(post_id, tags_id):
-        isSuccess = False
+    def create_link_posts_tags(post_id, tags_id):
+        is_success = False
         try:
             if post_id:
                 with ControllerDatabase.__connection() as conn:
@@ -184,11 +184,11 @@ class ControllerDatabase:
                             "INSERT INTO tags_posts_connection (post_id, tags_id) VALUES (?, ?)",
                             [post_id, tags_id]
                         )
-                        isSuccess = True
+                        is_success = True
 
         except Exception as exc:
             print(exc)
-        return isSuccess
+        return is_success
 
     @staticmethod
     def tags_with_connection(post_id):
@@ -220,3 +220,16 @@ class ControllerDatabase:
                 conn.commit()
         except Exception as exc:
             print(exc)
+
+    @staticmethod
+    def get_all_posts_flattened(parent_post_id=None, exclude_branch_post_id=None):
+        posts_flattened = []
+        try:
+            post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id)
+            posts_flattened = post_hierarchy
+
+        except Exception as e:
+            print(e)
+        return posts_flattened
+
+

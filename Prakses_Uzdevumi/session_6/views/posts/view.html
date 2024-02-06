@@ -23,8 +23,8 @@
             <input type="hidden" value="delete" name="button_type" />
             <input type="submit" value="Delete" name="button_submit" />
         </form>
-                {% if post.thumbnail_uuid %}
-                    <img src="{{ url_for('static', filename='images/' ~ post.thumbnail_uuid ~ '.png') }}" alt="Post Thumbnail">
+               {% if post.thumbnail_uuid %}
+                   <img src="uploads/images/{{ post.thumbnail_uuid }}.png" alt="Post Thumbnail">
                 {% endif %}
 
             <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
