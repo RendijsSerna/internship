@@ -2,7 +2,7 @@ import functools
 import os.path
 
 import flask
-from flask import request, redirect, url_for
+from flask import request, redirect, url_for, flash
 
 from controllers.ControllerDatabase import ControllerDatabase
 
@@ -23,6 +23,7 @@ class ControllerPosts:
         post = ModelPost()
         tags = ControllerDatabase.get_tags()
         tags_with_connection = ControllerDatabase.tags_with_connection(post_id)
+        fail_message = ""
 
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
@@ -45,58 +46,62 @@ class ControllerPosts:
             if button_type == "delete":
                 ControllerDatabase.delete_post(post_id)
                 redirect_url = '/?deleted=1'
-
-            post.title = request.form.get('post_title')
-            if post.title:
-                post.title = post.title.strip()
             else:
-                raise ValueError("Postam ir nepieciesams title")
 
-            post.body = request.form.get('post_body')
-            if post.body:
-                post.body = post.body.strip()
-            else:
-                raise ValueError("Postam ir nepieciesams body")
+                post.title = request.form.get('post_title')
+                if post.title:
+                    post.title = post.title.strip()
+                else:
+                    fail_message += "Missing post title. "
 
-            post.url_slug = request.form.get('url_slug')
-            if post.url_slug:
-                post.url_slug = post.url_slug.strip()
-            else:
-                raise ValueError("Postam ir nepieciesams url_slug")
+                post.body = request.form.get('post_body')
+                if post.body:
+                    post.body = post.body.strip()
+                else:
+                    fail_message += "Missing post body. "
 
-            try:
-                post.parent_post_id = int(request.form.get('parent_post_id'))
-            except:
-                post.parent_post_id = None
+                post.url_slug = request.form.get('url_slug')
+                if post.url_slug:
+                    post.url_slug = post.url_slug.strip()
+                else:
+                    fail_message += "Missing post URL slug. "
 
-            file = request.files['image']
-            if file:
-                post.thumbnail_uuid = UtilStrings.generate_random_uuid()
-                test = f"uploads/images/{post.thumbnail_uuid}.png"
-                file.save(test)
+                try:
+                    post.parent_post_id = int(request.form.get('parent_post_id'))
+                except:
+                    post.parent_post_id = None
 
-            if post.post_id > 0:
-                ControllerDatabase.update_post(post)
-                redirect_url = f"/?edited={post.url_slug}"
-            else:
-                post.post_id = ControllerDatabase.insert_post(post)
+                file = request.files['image']
+                if file:
+                    post.thumbnail_uuid = UtilStrings.generate_random_uuid()
+                    test = f"uploads/images/{post.thumbnail_uuid}.png"
+                    file.save(test)
 
-            selected_tags = request.form.getlist('selected_tags')
+                if fail_message:
+                    pass
+                else:
+                    if post.post_id > 0:
+                        ControllerDatabase.update_post(post)
+                        redirect_url = f"/?edited={post.url_slug}"
+                    else:
+                        post.post_id = ControllerDatabase.insert_post(post)
 
-            if selected_tags:
-                tags = ControllerDatabase.tags_with_connection(post.post_id)
+                selected_tags = request.form.getlist('selected_tags')
 
-                for tag in tags:
-                    ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
+                if selected_tags:
+                    tags = ControllerDatabase.tags_with_connection(post.post_id)
 
-                for tag_id in selected_tags:
-                    ControllerDatabase.create_link_posts_tags(post.post_id, tag_id)
+                    for tag in tags:
+                        ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
 
-            else:
-                tags = ControllerDatabase.tags_with_connection(post.post_id)
+                    for tag_id in selected_tags:
+                        ControllerDatabase.create_link_posts_tags(post.post_id, tag_id)
 
-                for tag in tags:
-                    ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
+                else:
+                    tags = ControllerDatabase.tags_with_connection(post.post_id)
+
+                    for tag in tags:
+                        ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
 
         if redirect_url:
             result = redirect(redirect_url)
@@ -106,7 +111,8 @@ class ControllerPosts:
                 post=post,
                 tags=tags,
                 tags_with_connection=tags_with_connection,
-                post_parent_id_and_title=post_parent_id_and_title
+                post_parent_id_and_title=post_parent_id_and_title,
+                fail_message=fail_message
 
             )
         return result

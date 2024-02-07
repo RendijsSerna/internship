@@ -14,7 +14,14 @@
       {% else %}
         New Post
       {% endif %}
+
     </div>
+    <div class="message">
+      {% if fail_message | length > 0  %}
+         {{ fail_message }}
+      {% endif %}
+    </div>
+
     <form action="{{ url_for('posts.post_edit', post_id=post.post_id) }}" method="POST" enctype="multipart/form-data">
 
       <label>Title</label>

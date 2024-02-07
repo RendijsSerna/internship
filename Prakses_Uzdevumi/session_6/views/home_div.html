@@ -18,7 +18,7 @@
     </div>
     {% for post in posts %}
     <div class="table-row">
-      <div class="row-item" style="padding-left: {{ 25 * post.depth}}px">{{ post.title }}</div>
+      <div class="row-item" style="padding-left: {{ 25 * post.depth}}px">{{post.title }}</div>
       <div class="row-item">{{ post.modified }}</div>
       <div class="row-item">
         <a href="{{url_for('posts.post_edit', post_id=post.post_id)}}">Edit</a>
