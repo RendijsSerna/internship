@@ -13,7 +13,7 @@ app.config.from_object(Configs)
 def home():
     params_GET = flask.request.args
     message = ""
-    posts = ControllerDatabase.get_all_posts()
+    posts = ControllerDatabase.get_all_posts_flattened()
     if params_GET.get("deleted"):
         message = "deleted"
     if params_GET.get("edited"):

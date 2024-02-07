@@ -17,21 +17,28 @@ class ControllerPosts:
     @staticmethod
     @blueprint.route("/new", methods=["POST", "GET"])
     @blueprint.route("/edit/<post_id>", methods=["POST", "GET"])
-    def post_edit(post_id=None):
-
+    def post_edit(post_id=0):
 
         redirect_url = None
-        post = ModelPost
+        post = ModelPost()
         tags = ControllerDatabase.get_tags()
         tags_with_connection = ControllerDatabase.tags_with_connection(post_id)
 
         if post_id is not None:
             post = ControllerDatabase.get_post(post_id)
 
-        post_flattened = ControllerDatabase.get_all_posts_flattened(parent_post_id=None)
+        post_flattened = ControllerDatabase.get_all_posts_flattened(exclude_branch_post_id=post_id)
         post_parent_id_and_title = [
             (None, "No parent")
         ]
+        for post_current in post_flattened:
+            prefix = ''
+            if post_current.depth > -1:
+                prefix = ''.join(['-'] * post_current.depth) + ' '
+                post_parent_id_and_title.append(
+                    (post_current.post_id,
+                     f'{prefix}{post_current.title}')
+                )
 
         if request.method == "POST":
             button_type = request.form.get("button_type")
@@ -56,6 +63,11 @@ class ControllerPosts:
                 post.url_slug = post.url_slug.strip()
             else:
                 raise ValueError("Postam ir nepieciesams url_slug")
+
+            try:
+                post.parent_post_id = int(request.form.get('parent_post_id'))
+            except:
+                post.parent_post_id = None
 
             file = request.files['image']
             if file:
@@ -93,8 +105,8 @@ class ControllerPosts:
                 'posts/edit.html',
                 post=post,
                 tags=tags,
-                tags_with_connection=tags_with_connection
-                #      post_parent_id_by_title=post_parent_id_by_title
+                tags_with_connection=tags_with_connection,
+                post_parent_id_and_title=post_parent_id_and_title
 
             )
         return result

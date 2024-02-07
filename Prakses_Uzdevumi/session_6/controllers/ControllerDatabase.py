@@ -18,11 +18,11 @@ class ControllerDatabase:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "INSERT INTO posts (body, title, url_slug, parent_post_id, thumbnail_uuid) "
+                    "INSERT INTO posts (title, body, url_slug, parent_post_id, thumbnail_uuid) "
                     "VALUES (:title, :body, :url_slug, :parent_post_id, :thumbnail_uuid);",
                     post.__dict__
                 )
-                post_id = cursor.execute("SELECT last_insert_rowid()").fetchone()[0]
+                post_id, = cursor.execute("SELECT last_insert_rowid()").fetchone()
                 cursor.close()
         except Exception as exc:
             print(exc)
@@ -49,16 +49,15 @@ class ControllerDatabase:
     def get_post(post_id: int = None, url_slug: str = None) -> ModelPost:
         post = None
         try:
-            with ControllerDatabase.__connection() as conn:
-                cursor = conn.cursor()
+            with UtilDatabaseCursor() as cursor:
                 if post_id:
                     query = cursor.execute(
-                        "SELECT * FROM posts WHERE post_id = :post_id AND isDeleted = False LIMIT 1 ;",
+                        "SELECT * FROM posts WHERE post_id = :post_id LIMIT 1;",
                         {'post_id': post_id}
                     )
                 else:
                     query = cursor.execute(
-                        "SELECT * FROM posts WHERE url_slug = :url_slug  AND isDeleted = False  LIMIT 1;",
+                        "SELECT * FROM posts WHERE url_slug = :url_slug LIMIT 1;",
                         {'url_slug': url_slug}
                     )
                 if query.rowcount:
@@ -75,14 +74,10 @@ class ControllerDatabase:
                         post.thumbnail_uuid,
                         post.status,
                         post.parent_post_id,
-                        post.isDeleted
-                    ) = col  # pythonic wat to copy one by one variable from one tuple to another tuple
-                cursor.close()
+                        post.is_deleted
+                    ) = col
 
-                if post.parent_post_id is not None:
-                    post.parent_post = ControllerDatabase.get_post(post_id=post.parent_post_id)
-
-                post.children_post = ControllerDatabase.get_all_posts(parent_post_id=post.post_id)
+                    post.children_posts = ControllerDatabase.get_all_posts(parent_post_id=post.post_id)
 
         except Exception as exc:
             print(exc)
@@ -95,7 +90,7 @@ class ControllerDatabase:
             with ControllerDatabase.__connection() as conn:
                 cursor = conn.cursor()
                 cursor.execute(
-                    "UPDATE posts SET  (isDeleted) =   (TRUE) WHERE post_id = :post_id  ;",
+                    "UPDATE posts SET  (is_deleted) =   (TRUE) WHERE post_id = :post_id  ;",
                     [post_id]
                 )
                 is_success = True
@@ -104,22 +99,47 @@ class ControllerDatabase:
         return is_success
 
     @staticmethod
-    def get_all_posts(parent_post_id=None) -> [ModelPost]:
+    def get_all_posts(parent_post_id=None):
         posts = []
         try:
             with UtilDatabaseCursor() as cursor:
                 cursor.execute(
-                    f"SELECT post_id FROM posts WHERE parent_post_id {'' if parent_post_id else 'IS'} ?"
-                    f" AND isDeleted = False",
+                    f"SELECT post_id FROM posts WHERE parent_post_id {'=' if parent_post_id else 'IS'} ?",
                     [parent_post_id]
                 )
                 for post_id, in cursor.fetchall():
                     post = ControllerDatabase.get_post(post_id)
-
                     posts.append(post)
         except Exception as exc:
             print(exc)
         return posts
+
+    @staticmethod
+    def get_all_posts_flattened(parent_post_id=None, exclude_branch_post_id=None):
+        posts_flat = []
+        try:
+            post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id)
+
+            while len(post_hierarchy) > 0:
+                post_cur = post_hierarchy.pop(0)
+
+                if post_cur.post_id == exclude_branch_post_id:
+                    continue
+
+                if post_cur.parent_post_id is not None:
+                    post_cur.depth += 1
+                    post_parent = next(
+                        iter(it for it in posts_flat if it.post_id == post_cur.parent_post_id))
+
+                    if post_parent:
+                        post_cur.depth += post_parent.depth
+
+                post_hierarchy = post_cur.children_posts + post_hierarchy
+                posts_flat.append(post_cur)
+
+        except Exception as exc:
+            print(exc)
+        return posts_flat
 
     @staticmethod
     def get_tags(post_id: int = None):
@@ -220,16 +240,5 @@ class ControllerDatabase:
                 conn.commit()
         except Exception as exc:
             print(exc)
-
-    @staticmethod
-    def get_all_posts_flattened(parent_post_id=None, exclude_branch_post_id=None):
-        posts_flattened = []
-        try:
-            post_hierarchy = ControllerDatabase.get_all_posts(parent_post_id)
-            posts_flattened = post_hierarchy
-
-        except Exception as e:
-            print(e)
-        return posts_flattened
 
 
