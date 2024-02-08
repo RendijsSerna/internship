@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from typing import List
 
+from models import ModelTag
 from models.EnumPostStatus import EnumPostStatus
 
 

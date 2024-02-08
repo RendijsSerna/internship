@@ -87,19 +87,17 @@ class ControllerPosts:
                         post.post_id = ControllerDatabase.insert_post(post)
 
                 selected_tags = request.form.getlist('selected_tags')
-
+                tags = ControllerDatabase.tags_with_connection(post.post_id)
                 if selected_tags:
-                    tags = ControllerDatabase.tags_with_connection(post.post_id)
-
-                    for tag in tags:
-                        ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
+                    for tag_id in tags:
+                        if tag_id not in selected_tags:
+                            ControllerDatabase.delete_post_tags_connection(post.post_id, tag_id)
 
                     for tag_id in selected_tags:
-                        ControllerDatabase.create_link_posts_tags(post.post_id, tag_id)
+                        if tag_id not in tags:
+                            ControllerDatabase.create_link_posts_tags(post.post_id, tag_id)
 
                 else:
-                    tags = ControllerDatabase.tags_with_connection(post.post_id)
-
                     for tag in tags:
                         ControllerDatabase.delete_post_tags_connection(post.post_id, tag)
 
